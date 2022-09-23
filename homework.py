@@ -4,7 +4,6 @@ from http import HTTPStatus
 import logging
 import os
 import requests
-import sys
 import time
 import telegram
 
@@ -33,12 +32,6 @@ logging.basicConfig(
     filename=os.path.join(os.path.dirname(__file__), 'main.log'),
     format='%(asctime)s, %(levelname)s, %(message)s, %(name)s'
 )
-# logger = logging.getLogger(__name__)
-# formatter = '%(asctime)s, %(levelname)s, %(message)s'
-# handler = logging.StreamHandler(sys.stdout)
-# logger.setLevel(logging.DEBUG)
-# handler.setFormatter(formatter)
-# logger.addHandler(handler)
 
 
 def send_message(bot, message):
@@ -61,10 +54,8 @@ def get_api_answer(current_timestamp):
 
     if response.status_code != HTTPStatus.OK:
         message = (f'Эндпоинт {ENDPOINT} недоступен, '
-               f'http status: {response.status_code}'
-               )
+               f'http status: {response.status_code}')
         raise APIErrException(message)
-
     return response.json()
 
 
@@ -77,10 +68,8 @@ def check_response(response):
 
     if not isinstance(hw_list, list):
         message = ('Значение "homeworks" соответствует'
-               f'"{type(hw_list)}" , а не "list"'
-               )
+               f'"{type(hw_list)}" , а не "list"')
         raise APIErrException(message)
-
     return hw_list
 
 
@@ -99,7 +88,6 @@ def parse_status(homework):
                f'неизвестный статус {homework_status} для "{homework_name}"'
                )
         raise APIErrException(message)
-
     return f'Изменился статус проверки работы "{homework_name}". {verdict}'
 
 
