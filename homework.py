@@ -104,9 +104,9 @@ def check_tokens():
 def main():
     """Основная логика работы бота."""
     logging.basicConfig(
-    level=logging.DEBUG,
-    filename=os.path.join(os.path.dirname(__file__), 'main.log'),
-    format='%(asctime)s, %(levelname)s, %(message)s, %(name)s'
+        level=logging.DEBUG,
+        filename=os.path.join(os.path.dirname(__file__), 'main.log'),
+        format='%(asctime)s, %(levelname)s, %(message)s, %(name)s'
     )
 
     if not check_tokens():
@@ -124,7 +124,6 @@ def main():
                 send_message(bot, parse_status(hw_list[0]))
             current_timestamp = int(time.time())
             time.sleep(RETRY_TIME)
-
 
         except APIErrException as error:
             message = f'Сбой в работе программы: {error}'
