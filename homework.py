@@ -103,35 +103,40 @@ def check_tokens():
 
 def main():
     """Основная логика работы бота."""
-    logging.basicConfig(
-        level=logging.DEBUG,
-        filename=os.path.join(os.path.dirname(__file__), 'main.log'),
-        format='%(asctime)s, %(levelname)s, %(message)s, %(name)s'
-    )
-
     if not check_tokens():
         logging.critical('Прблема с check_tokens()')
         sys.exit()
 
     bot = telegram.Bot(token=TELEGRAM_TOKEN)
     current_timestamp = int(time.time())
+    last_message = ''
 
     while True:
         try:
             response = get_api_answer(current_timestamp)
             hw_list = check_response(response)
-            if len(hw_list) > 0:
-                send_message(bot, parse_status(hw_list[0]))
+            if hw_list:
+                message = parse_status(hw_list)
+                if message != last_message:
+                    send_message(bot, message)
+                    last_message = message
             current_timestamp = int(time.time())
             time.sleep(RETRY_TIME)
 
         except APIErrException as error:
             message = f'Сбой в работе программы: {error}'
-            send_message(bot, message)
+            if message != last_message:
+                send_message(bot, message)
+                last_message = message
 
         finally:
             time.sleep(RETRY_TIME)
 
 
 if __name__ == '__main__':
+    logging.basicConfig(
+        level=logging.DEBUG,
+        filename=os.path.join(os.path.dirname(__file__), 'main.log'),
+        format='%(asctime)s, %(levelname)s, %(message)s, %(name)s'
+    )
     main()
